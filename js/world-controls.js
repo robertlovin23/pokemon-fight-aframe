@@ -8,13 +8,12 @@ AFRAME.registerComponent('change-ground', {
     init: function(){
     
         var el = this.el;
-        el.addEventListener('mouseup', function(e){
-            console.log(el.getAttribute('environment','groundColor'))
-            el.setAttribute('environment', 'groundColor', changeGroundSkyColor());
-            el.setAttribute('environment', 'fog', loopFog());
-            // el.setAttribute('environment', 'ground', loopThroughScenery())
-            el.setAttribute('environment', 'groundYScale', randomizeGroundScale());
-        })
+        console.log(el.getAttribute('environment','groundColor'))
+        el.setAttribute('environment', 'groundColor', changeGroundSkyColor());
+        el.setAttribute('environment', 'fog', loopFog());
+        // el.setAttribute('environment', 'ground', loopThroughScenery())
+        el.setAttribute('environment', 'groundYScale', randomizeGroundScale());
+        
     }
 })
 AFRAME.registerComponent('randomize-position',{
