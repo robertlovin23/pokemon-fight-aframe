@@ -27,12 +27,14 @@ AFRAME.registerComponent('randomize-position',{
 
 AFRAME.registerComponent('villain-remove', {
     init: function(){
-        var villains = document.querySelectorAll(".villain")
+        // var villains = [].slice.call(document.querySelectorAll(".villain"));
+        var villains = document.querySelectorAll(".villain");
         for(var i = 0; i < villains.length; i++){
             (function(x){
                 villains[x].addEventListener('click', function(){
                     console.log(villains[x])
-                    villains[x].setAttribute('visible', false);
+                    villains[x].setAttribute('visible', false)
+                    // villains[x].parentNode.removeChild(villains[x]);
                 });
             })(i)
         }

@@ -22,7 +22,9 @@
             
             <a-entity id="cameraMove" rotation="0 180 0" position="-0.1 0 -7.0">
                 <a-camera id="camera" position="0 1.6 -3.5" camera-controls lane-controls>
-                    <a-cursor></a-cursor>
+                    <a-cursor cursor="fuse: true; fuseTimeout: 500"
+                            position="0 0 -1"
+                            ></a-cursor>
                     <a-entity id="playing-field" rotation="0 0 0" position="0 -.5 -2.5">
                         <a-entity id="player">
                             <a-gltf-model src="#player" position="0 -0.7 0" rotation="0 180 0" scale="1 1 1" animation-mixer></a-gltf-model>
