@@ -1,33 +1,33 @@
 var CENTER_ROTATION = 180;
 var LEFT_ROTATION = 135;
 var RIGHT_ROTATION = 90;
+var numberOfVillains = 0;
 
 AFRAME.registerComponent('change-ground', {
     dependencies: ['material'],
-
     init: function(){
-    
         var el = this.el;
         console.log(el.getAttribute('environment','groundColor'))
-        el.setAttribute('environment', 'groundColor', changeGroundSkyColor());
-        el.setAttribute('environment', 'fog', loopFog());
-        // el.setAttribute('environment', 'ground', loopThroughScenery())
-        el.setAttribute('environment', 'groundYScale', randomizeGroundScale());
-        
+        window.addEventListener('loading', function(){
+            el.setAttribute('environment', 'groundColor', changeGroundSkyColor());
+            el.setAttribute('environment', 'fog', loopFog());
+            // el.setAttribute('environment', 'ground', loopThroughScenery())
+            el.setAttribute('environment', 'groundYScale', randomizeGroundScale());
+        })    
     }
 })
 AFRAME.registerComponent('randomize-position',{
     init: function(){
         var el = this.el;
         el.setAttribute('animation', 'from',{x: Math.random() * (10 - (-10)) + -10, y: 1.6, z: Math.random() * (10 - 5) + 5})
-
+        el.setAttribute('animation', 'dur', loopDur());
         console.log(el.getAttribute('animation', 'from'))
     }
 })
 
 AFRAME.registerComponent('villain-remove', {
     init: function(){
-        var villains = document.querySelectorAll('.villain')
+        var villains = document.querySelectorAll(".villain")
         for(var i = 0; i < villains.length; i++){
             (function(x){
                 villains[x].addEventListener('click', function(){
@@ -57,12 +57,6 @@ AFRAME.registerComponent('game-start', {
         })
     }
 })
-// AFRAME.registerComponent('add-scenery', function(e){
-//     var sceneryElement = document.querySelector('#env')
-//     sceneryElement.addEventListener('click', function(){
-
-//     })
-// })
 
 function changeGroundSkyColor(){
     var letters = "0123456789ABCDEF"
@@ -79,6 +73,14 @@ function loopFog(){
         loop = Math.random() 
     }
     return loop;
+}
+
+function loopDur(){
+    var time = 0;
+    for(var i = 0; i < 1; i++){
+        time = Math.floor(Math.random() * (6500 - 4500) + 4500)
+    }
+    return time;
 }
 
 function randomizeGroundScale(){
@@ -98,7 +100,6 @@ function randomizeGroundScale(){
 
  var templates;
  var villainContainer;
- var numberOfVillains = 0;
  var villainTimer;
 
  /*Initializes villains and also the wrapping container*/
@@ -134,7 +135,7 @@ function addVillainTo(position_index){
 -----------------------------------------------------------------------------------------------------------------*/
 function addRandomVillains(
   { 
-      villainOneProb = 0.2,
+      villainOneProb = 0.4,
       maxNumberOfVillains = 1
   } = {}) {
       var villains = [
@@ -147,18 +148,6 @@ function addRandomVillains(
       var numberOfVillainsAdded = 0;
       var positionArray = [];
 
-      /* Possible solution for randomizing*/
-      // for (var i = 0; i < positionArray.length; i++){
-      //   (function(a){
-      //       var posx = Math.random() * (3 - (-3)) + -3;
-      //       var posy = Math.random() * (3 - 1) + 1;
-      //       var posz = -10
-
-            
-      //       positionArray[a].setAttribute('position', {x: posx, y: posy, z: posz})
-      //       console.log(positionArray[a].getAttribute('position'))
-      //   })(i);
-      // }
       villains.forEach(function(villain) {
           if(Math.random() < villain.probability && numberOfVillainsAdded < maxNumberOfVillains){
               addVillainTo(villain.position_index)
@@ -169,7 +158,7 @@ function addRandomVillains(
       });
       return numberOfVillainsAdded;
 }
-function addVillainsRandomlyLoop({intervalLength = 2000} = {}) {
+function addVillainsRandomlyLoop({intervalLength = 1000} = {}) {
   villainTimer = setInterval(addRandomVillains, intervalLength);
     // clearInterval(villainTimer);
 }
@@ -182,8 +171,7 @@ function gameStart(){
     isGameRunning = true;
     // setupScore();
     // updateScore();
-    // setupScore();
-    // updateScore();
+
     addVillainsRandomlyLoop();
   }
   
