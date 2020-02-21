@@ -19,7 +19,7 @@ AFRAME.registerComponent('change-ground', {
 AFRAME.registerComponent('randomize-position',{
     init: function(){
         var el = this.el;
-        el.setAttribute('animation', 'from',{x: Math.random() * (10 - (-10)) + -10, y: 1.6, z: Math.random() * (10 - 5) + 5})
+        el.setAttribute('animation', 'from',{x: Math.random() * (10 - (-10)) + -10, y: 1.6, z: Math.random() * (10 - 7) + 7})
         el.setAttribute('animation', 'dur', loopDur());
         console.log(el.getAttribute('animation', 'from'))
     }
@@ -28,15 +28,20 @@ AFRAME.registerComponent('randomize-position',{
 AFRAME.registerComponent('villain-remove', {
     init: function(){
         // var villains = [].slice.call(document.querySelectorAll(".villain"));
-        var villains = document.querySelectorAll(".villain");
-        for(var i = 0; i < villains.length; i++){
-            (function(x){
-                villains[x].addEventListener('click', function(){
-                    console.log(villains[x])
-                    villains[x].setAttribute('visible', false)
-                    // villains[x].parentNode.removeChild(villains[x]);
-                });
-            })(i)
+            var villains = document.querySelectorAll(".villain");
+            if(villains.length > 0){
+                for(var i = 0; i < villains.length; i++){
+                    (function(x){
+                        villains[x].addEventListener('click', function(event){
+                            console.log(villains[x].id,event.target.id);
+                            if(villains[x].id === event.target.id){
+                                villains[x].setAttribute('visible', false)
+                            } else {
+                                return false;
+                            }
+                        });
+                    })(i)
+                }
         }
     }
 }),
@@ -80,7 +85,7 @@ function loopFog(){
 function loopDur(){
     var time = 0;
     for(var i = 0; i < 1; i++){
-        time = Math.floor(Math.random() * (6500 - 4500) + 4500)
+        time = Math.floor(Math.random() * (6500 - 5000) + 5000)
     }
     return time;
 }
@@ -109,7 +114,7 @@ function setupVillains(){
 
      var villainObjectOne = document.getElementById("villain-one");
      templates = [villainObjectOne];
-     villainContainer = document.getElementById("villain");
+     villainContainer = document.getElementById("villain-parent");
 
 }
 
@@ -123,11 +128,19 @@ function addVillains(el){
     el.id = "villain-" + numberOfVillains;
     villainContainer.appendChild(el);
 }
+// function removeVillains(el){
+//     el.id = "villain-" + numberOfVillains;
+//     if(el.parentNode){
+//         el.parentNode.removeChild(el);
+//     }
+// }
+
 /*Assigns the villain an index so that it will belong to a particular lane-----------------------------------*/
 function addVillainTo(position_index){
-  var villain_index = templates[position_index]
-  // console.log(villain_index)
-  addVillains(villain_index.cloneNode(true));
+        var villain_index = templates[position_index]
+        console.log(villain_index)
+        // console.log(villain_index)
+        addVillains(villain_index.cloneNode(true));
 }
 
 
