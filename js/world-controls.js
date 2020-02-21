@@ -2,12 +2,14 @@ var CENTER_ROTATION = 180;
 var LEFT_ROTATION = 135;
 var RIGHT_ROTATION = 90;
 var numberOfVillains = 0;
+var roundScore = 0;
+var playerLives = 0;
+
 
 AFRAME.registerComponent('change-ground', {
     dependencies: ['material'],
     init: function(){
         var el = this.el;
-        console.log(el.getAttribute('environment','groundColor'))
         window.addEventListener('loading', function(){
             el.setAttribute('environment', 'groundColor', changeGroundSkyColor());
             el.setAttribute('environment', 'fog', loopFog());
@@ -29,14 +31,15 @@ AFRAME.registerComponent('villain-remove', {
     init: function(){
         // var villains = [].slice.call(document.querySelectorAll(".villain"));
             var villains = document.querySelectorAll(".villain");
-            if(villains.length > 0){
-                for(var i = 1; i < villains.length; i++){
+            if(villains.length > 0){  
+                for(var i = 0; i < villains.length; i++){
                     (function(x){
                         villains[x].addEventListener('click', function(event){
-                            console.log(villains[x].id,event.target.id);
                             if(villains[x].id === event.target.id){
-                                // villains[x].setAttribute('visible', false)
-                                removeVillains(villains[x])
+                                villains[x].setAttribute('visible', false)
+                                // removeVillains(event.target)
+                                // roundScore += 1;
+                                
                             } else {
                                 return false;
                             }
@@ -46,15 +49,6 @@ AFRAME.registerComponent('villain-remove', {
         }
     }
 }),
-// AFRAME.registerComponent('raycaster-autorefresh', {
-//         init: function () {
-//           var el = this.el;
-//           this.el.addEventListener('model-loaded', function () {
-//             var cursorEl = el.querySelector('[raycaster]');
-//             cursorEl.components.raycaster.refreshObjects();
-//           });
-//         }
-//       })
 /*Starts the game--------------------------------------------------------------------------*/
 AFRAME.registerComponent('game-start', {
     init: function () {
@@ -98,13 +92,6 @@ function randomizeGroundScale(){
     }
     return groundScale;
 }
-// function loopThroughScenery(){
-//     var groundArray = ['hills', 'canyon']
-//         for(var i = 0; i < groundArray.length; i++){
-//             groundArray[i]
-//         }
-//     return groundArray[i];
-// }
 
  var templates;
  var villainContainer;
@@ -127,7 +114,7 @@ function loopVillains(){
 function addVillains(el){
     numberOfVillains += 1;
     el.id = "villain-" + numberOfVillains;
-    villainContainer.appendChild(el);
+    console.log(villainContainer.appendChild(el))
 }
 function removeVillains(el){
     el.id = "villain-" + numberOfVillains;
@@ -138,25 +125,27 @@ function removeVillains(el){
 
 /*Assigns the villain an index so that it will belong to a particular lane-----------------------------------*/
 function addVillainTo(position_index){
+
         var villain_index = templates[position_index]
+
         console.log(villain_index)
-        // console.log(villain_index)
         addVillains(villain_index.cloneNode(true));
 }
 
 
-/*Function that randomizes the position of each villain. It puts them into an array with each position index and
- then the array is looped over to randomize position, where a setAttribute call is invoked. Then a forEach loop is invoked that
- randomizes villain probability and pushs the villain object onto the position Array. Finally, the value is returned
------------------------------------------------------------------------------------------------------------------*/
+// /*Function that randomizes the position of each villain. It puts them into an array with each position index and
+//  then the array is looped over to randomize position, where a setAttribute call is invoked. Then a forEach loop is invoked that
+//  randomizes villain probability and pushs the villain object onto the position Array. Finally, the value is returned
+// -----------------------------------------------------------------------------------------------------------------*/
 function addRandomVillains(
   { 
       villainOneProb = 0.4,
       maxNumberOfVillains = 1
-  } = {}) {
+  } = {}, el) {
       var villains = [
           {probability: villainOneProb, position_index: 0},  
       ]
+      var el = el
       shuffle(villains)
 
       console.log('villains ', villains)
@@ -166,18 +155,33 @@ function addRandomVillains(
 
       villains.forEach(function(villain) {
           if(Math.random() < villain.probability && numberOfVillainsAdded < maxNumberOfVillains){
+              console.log(villain)
               addVillainTo(villain.position_index)
               numberOfVillainsAdded += 1;
 
               positionArray.push(villain.position_index)
           }
       });
+      console.log(numberOfVillainsAdded)
       return numberOfVillainsAdded;
 }
-function addVillainsRandomlyLoop({intervalLength = 1000} = {}) {
+// function addVillainsToLoop(){
+//     // var villains = [].slice.call(document.querySelectorAll(".villain"));
+//         var villains = document.querySelectorAll(".villain");
+//         if(villains.length > 0){  
+//             for(var i = 0; i < villains.length; i++){
+//                 (function(x){
+//                     console.log(villain[x])
+//                     addVillains(villain[x])
+//                 })(i)
+//             }
+//     }
+// }
+function addVillainsRandomlyLoop({intervalLength = 1500} = {}) {
   villainTimer = setInterval(addRandomVillains, intervalLength);
     // clearInterval(villainTimer);
 }
+
 var isGameRunning = false;
     
 /*Function that starts game and loops villains*/
