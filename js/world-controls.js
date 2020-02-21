@@ -30,12 +30,13 @@ AFRAME.registerComponent('villain-remove', {
         // var villains = [].slice.call(document.querySelectorAll(".villain"));
             var villains = document.querySelectorAll(".villain");
             if(villains.length > 0){
-                for(var i = 0; i < villains.length; i++){
+                for(var i = 1; i < villains.length; i++){
                     (function(x){
                         villains[x].addEventListener('click', function(event){
                             console.log(villains[x].id,event.target.id);
                             if(villains[x].id === event.target.id){
-                                villains[x].setAttribute('visible', false)
+                                // villains[x].setAttribute('visible', false)
+                                removeVillains(villains[x])
                             } else {
                                 return false;
                             }
@@ -128,12 +129,12 @@ function addVillains(el){
     el.id = "villain-" + numberOfVillains;
     villainContainer.appendChild(el);
 }
-// function removeVillains(el){
-//     el.id = "villain-" + numberOfVillains;
-//     if(el.parentNode){
-//         el.parentNode.removeChild(el);
-//     }
-// }
+function removeVillains(el){
+    el.id = "villain-" + numberOfVillains;
+    if(el.parentNode){
+        el.parentNode.removeChild(el);
+    }
+}
 
 /*Assigns the villain an index so that it will belong to a particular lane-----------------------------------*/
 function addVillainTo(position_index){
