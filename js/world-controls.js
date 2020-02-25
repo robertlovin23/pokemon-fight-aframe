@@ -31,17 +31,18 @@ AFRAME.registerComponent('villain-remove', {
     init: function(){
         // var villains = [].slice.call(document.querySelectorAll(".villain"));
             var villains = document.querySelectorAll(".villain");
+            var score = document.querySelector('#score')
             if(villains.length > 0){  
                 for(var i = 0; i < villains.length; i++){
                     (function(x){
                         villains[x].addEventListener('click', function(event){
                             if(villains[x].id === event.target.id){
-                                villains[x].setAttribute('visible', false)
-                                // removeVillains(event.target)
-                                // roundScore += 1;
-                                
+                                    event.target.setAttribute('visible', false)
+                                    roundScore += 1;
+                                    console.log(score.getAttribute("value"))
+                                    score.setAttribute("value", roundScore.toString())
                             } else {
-                                return false;
+                                return;
                             }
                         });
                     })(i)
@@ -52,10 +53,17 @@ AFRAME.registerComponent('villain-remove', {
 /*Starts the game--------------------------------------------------------------------------*/
 AFRAME.registerComponent('game-start', {
     init: function () {
-      const scene = this.el.sceneEl;
-        scene.addEventListener('click', () => {
-          setupVillains();
-          gameStart();
+      var el = this.el;
+      var gameField = document.querySelector("#villain-parent")
+      var score = document.querySelector("#scoreDisplay")
+        el.addEventListener('click', () => {
+          el.setAttribute('visible', false)
+          gameField.setAttribute('visible', true)
+          score.setAttribute("visible", true)
+          if(gameField.getAttribute('visible', true)){
+            setupVillains();
+            gameStart();
+          }
         })
     }
 })
@@ -114,18 +122,19 @@ function loopVillains(){
 function addVillains(el){
     numberOfVillains += 1;
     el.id = "villain-" + numberOfVillains;
-    console.log(villainContainer.appendChild(el))
+    villainContainer.appendChild(el);
 }
-function removeVillains(el){
-    el.id = "villain-" + numberOfVillains;
-    if(el.parentNode){
-        el.parentNode.removeChild(el);
-    }
-}
+
+// function removeVillains(el){
+//     el.id = "villain-" + numberOfVillains;
+//     if(el.parentNode){
+//         el.parentNode.removeChild(el);
+//     }
+// }
 
 /*Assigns the villain an index so that it will belong to a particular lane-----------------------------------*/
 function addVillainTo(position_index){
-
+        console.log(templates)
         var villain_index = templates[position_index]
 
         console.log(villain_index)
